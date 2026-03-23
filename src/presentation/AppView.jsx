@@ -6,7 +6,6 @@ import NowPlayingCard from './components/NowPlayingCard'
 import StatusCard from './components/StatusCard'
 
 function AppView({
-  apiBase,
   roles,
   busy,
   status,
@@ -66,7 +65,6 @@ function AppView({
           </div>
           <div className="relative flex items-start gap-3">
             <div className="text-right text-sm text-zinc-300">
-              <p>API: {apiBase}</p>
               <p>Roles: {roles.length ? roles.join(', ') : 'none'}</p>
             </div>
             <div className="relative">
@@ -220,7 +218,7 @@ function AppView({
                 isAdmin={isAdmin}
               />
 
-              <NowPlayingCard playerState={music.playerState} artUrls={music.artUrls} />
+              <NowPlayingCard playerState={music.playerState} />
             </div>
           ) : null}
 

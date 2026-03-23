@@ -16,14 +16,16 @@ export function useMusicOrchestration({ token, setBusy, setStatus }) {
     label: '',
     streamToken: '',
     objectUrl: '',
+    artUrl: '',
   })
   const [artUrls, setArtUrls] = useState({})
 
   useEffect(() => {
     return () => {
       revokeObjectUrl(playerState.objectUrl)
+      revokeObjectUrl(playerState.artUrl)
     }
-  }, [playerState.objectUrl])
+  }, [playerState.artUrl, playerState.objectUrl])
 
   useEffect(() => {
     let cancelled = false
@@ -115,16 +117,22 @@ export function useMusicOrchestration({ token, setBusy, setStatus }) {
 
     try {
       const streamToken = await fetchStreamToken(token, songId)
-      const streamBlob = await fetchSongStream(token, songId, streamToken)
+      const [streamBlob, artBlob] = await Promise.all([
+        fetchSongStream(token, songId, streamToken),
+        fetchAlbumArt(token, songId).catch(() => null),
+      ])
       const objectUrl = URL.createObjectURL(streamBlob)
+      const artUrl = artBlob ? URL.createObjectURL(artBlob) : ''
 
       revokeObjectUrl(playerState.objectUrl)
+      revokeObjectUrl(playerState.artUrl)
 
       setPlayerState({
         id: songId,
         label: song.title || song.name || `Song ${songId}`,
         streamToken,
         objectUrl,
+        artUrl,
       })
       setStatus(`Ready to play song ${songId}. Auth header and stream token applied.`)
     } catch (error) {
@@ -137,9 +145,10 @@ export function useMusicOrchestration({ token, setBusy, setStatus }) {
   const resetMusicState = () => {
     revokeObjectUrlMap(artUrls)
     revokeObjectUrl(playerState.objectUrl)
+    revokeObjectUrl(playerState.artUrl)
     setMusic([])
     setSongUpload(null)
-    setPlayerState({ id: null, label: '', streamToken: '', objectUrl: '' })
+    setPlayerState({ id: null, label: '', streamToken: '', objectUrl: '', artUrl: '' })
     setArtUrls({})
   }
 

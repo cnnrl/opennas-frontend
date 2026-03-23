@@ -1,9 +1,9 @@
 import { useEffect, useRef } from 'react'
 
-function NowPlayingCard({ playerState, artUrls = {} }) {
+function NowPlayingCard({ playerState }) {
   const audioRef = useRef(null)
   const sourceUrl = playerState.streamUrl || playerState.objectUrl || ''
-  const coverSrc = playerState.id ? artUrls[playerState.id] || '' : ''
+  const coverSrc = playerState.artUrl || ''
 
   useEffect(() => {
     if (!sourceUrl || !audioRef.current) {

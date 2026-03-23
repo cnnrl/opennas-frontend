@@ -1,4 +1,3 @@
-import { API_BASE } from '../config/constants'
 import { useAuthOrchestration } from './useAuthOrchestration'
 import { useFilesOrchestration } from './useFilesOrchestration'
 import { useMusicOrchestration } from './useMusicOrchestration'
@@ -24,7 +23,6 @@ export function useAppController() {
   }
 
   return {
-    apiBase: API_BASE,
     busy,
     status,
     token: auth.token,

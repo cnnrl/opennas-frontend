@@ -1,5 +1,15 @@
-const CONTROL_CHARACTERS_REGEX = /[\u0000-\u001F\u007F]/
 const USERNAME_REGEX = /^[A-Za-z0-9._-]+$/
+
+function hasControlCharacters(value) {
+  for (let index = 0; index < value.length; index += 1) {
+    const code = value.charCodeAt(index)
+    if (code <= 31 || code === 127) {
+      return true
+    }
+  }
+
+  return false
+}
 
 export function normalizeToken(value) {
   if (typeof value !== 'string') {
@@ -24,7 +34,7 @@ export function sanitizeBearerToken(value) {
     return ''
   }
 
-  if (CONTROL_CHARACTERS_REGEX.test(token)) {
+  if (hasControlCharacters(token)) {
     throw new Error('Token contains invalid control characters.')
   }
 
@@ -42,7 +52,7 @@ export function sanitizeIdSegment(value, name = 'id') {
     throw new Error(`Missing ${name}.`)
   }
 
-  if (raw.length > 128 || CONTROL_CHARACTERS_REGEX.test(raw)) {
+  if (raw.length > 128 || hasControlCharacters(raw)) {
     throw new Error(`Invalid ${name}.`)
   }
 
@@ -61,7 +71,7 @@ export function validateAuthRequest(mode, authForm) {
     throw new Error('Username must be 3-64 chars and use only letters, numbers, ., _, or -.')
   }
 
-  if (!password || password.length > 256 || CONTROL_CHARACTERS_REGEX.test(password)) {
+  if (!password || password.length > 256 || hasControlCharacters(password)) {
     throw new Error('Password is invalid.')
   }
 

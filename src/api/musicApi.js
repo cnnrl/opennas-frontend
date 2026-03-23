@@ -68,7 +68,28 @@ export async function uploadMusic(token, file) {
 
 export async function fetchAlbumArt(token, songId) {
   const safeSongId = sanitizeIdSegment(songId, 'song id')
-  return request(`/music/art/${safeSongId}`, { token })
+  const normalizedToken = sanitizeBearerToken(token)
+  const response = await fetch(`${API_BASE}/music/art/${safeSongId}`, {
+    method: 'GET',
+    headers: normalizedToken
+      ? {
+          Authorization: `Bearer ${normalizedToken}`,
+        }
+      : {},
+    credentials: 'omit',
+  })
+
+  if (!response.ok) {
+    let details = ''
+    try {
+      details = await response.text()
+    } catch {
+      details = ''
+    }
+    throw new Error(`HTTP ${response.status}${details ? `: ${details}` : ''}`)
+  }
+
+  return response.blob()
 }
 
 export async function fetchStreamToken(token, songId) {
