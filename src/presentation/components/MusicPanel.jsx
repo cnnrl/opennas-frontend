@@ -49,7 +49,7 @@ function MusicPanel({
         {music.length === 0 && <p className="text-sm text-zinc-500">No songs loaded.</p>}
         {music.map((song, index) => {
           const id = song.id ?? song.musicId ?? song.songId ?? index
-          const title = song.title || song.name || `Song ${id}`
+          const title = song.songName || song.title || song.name || song.fileName || `Song ${id}`
           const artist = song.artist || song.author || 'Unknown artist'
 
           return (

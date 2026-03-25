@@ -129,7 +129,7 @@ export function useMusicOrchestration({ token, setBusy, setStatus }) {
 
       setPlayerState({
         id: songId,
-        label: song.title || song.name || `Song ${songId}`,
+        label: song.songName || song.title || song.name || song.fileName || `Song ${songId}`,
         streamToken,
         objectUrl,
         artUrl,
