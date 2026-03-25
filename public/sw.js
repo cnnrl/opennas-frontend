@@ -1,4 +1,4 @@
-const SW_VERSION = 'opennas-v1';
+const SW_VERSION = 'opennas-v2';
 const APP_SHELL_CACHE = `${SW_VERSION}-app-shell`;
 const RUNTIME_CACHE = `${SW_VERSION}-runtime`;
 
@@ -38,11 +38,17 @@ self.addEventListener('fetch', (event) => {
   }
 
   const requestUrl = new URL(event.request.url);
+  const hasAuthHeader = event.request.headers.has('authorization');
+  const hasTokenQuery = requestUrl.searchParams.has('token');
+  const isSensitivePath =
+    requestUrl.pathname.startsWith('/api') ||
+    requestUrl.pathname.startsWith('/stream') ||
+    requestUrl.pathname.startsWith('/music');
 
-  // Keep API requests network-first so user data remains fresh.
-  if (requestUrl.pathname.startsWith('/api')) {
+  // Never cache auth-bearing or tokenized requests.
+  if (hasAuthHeader || hasTokenQuery || isSensitivePath) {
     event.respondWith(
-      fetch(event.request).catch(() => caches.match(event.request))
+      fetch(event.request)
     );
     return;
   }

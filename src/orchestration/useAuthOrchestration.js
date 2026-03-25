@@ -1,18 +1,11 @@
 import { useMemo, useState } from 'react'
 import { authenticate } from '../api/authApi'
-import { TOKEN_STORAGE_KEY } from '../config/constants'
 import { sanitizeBearerToken, validateAuthRequest } from '../utils/security'
 import { extractRoles, parseJwt } from '../utils/jwt'
 
 export function useAuthOrchestration({ setBusy, setStatus }) {
-  const [token, setTokenState] = useState(() => {
-    try {
-      return sanitizeBearerToken(sessionStorage.getItem(TOKEN_STORAGE_KEY) || '')
-    } catch {
-      sessionStorage.removeItem(TOKEN_STORAGE_KEY)
-      return ''
-    }
-  })
+  // Keep JWT in memory only to reduce XSS token persistence risk.
+  const [token, setTokenState] = useState('')
   const [authMode, setAuthMode] = useState('login')
   const [authForm, setAuthForm] = useState({ username: '', password: '' })
 
@@ -23,12 +16,6 @@ export function useAuthOrchestration({ setBusy, setStatus }) {
   const setToken = (value) => {
     const nextToken = sanitizeBearerToken(value)
     setTokenState(nextToken)
-
-    if (nextToken) {
-      sessionStorage.setItem(TOKEN_STORAGE_KEY, nextToken)
-    } else {
-      sessionStorage.removeItem(TOKEN_STORAGE_KEY)
-    }
   }
 
   const updateAuth = (field, value) => {

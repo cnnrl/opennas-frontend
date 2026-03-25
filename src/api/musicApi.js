@@ -71,6 +71,8 @@ export async function fetchAlbumArt(token, songId) {
   const normalizedToken = sanitizeBearerToken(token)
   const response = await fetch(`${API_BASE}/music/art/${safeSongId}`, {
     method: 'GET',
+    cache: 'no-store',
+    referrerPolicy: 'no-referrer',
     headers: normalizedToken
       ? {
           Authorization: `Bearer ${normalizedToken}`,
@@ -115,6 +117,8 @@ export async function fetchSongStream(token, songId, streamToken) {
   const normalizedToken = sanitizeBearerToken(token)
   const response = await fetch(buildSongStreamUrl(songId, streamToken), {
     method: 'GET',
+    cache: 'no-store',
+    referrerPolicy: 'no-referrer',
     headers: {
       Authorization: `Bearer ${normalizedToken}`,
       Range: 'bytes=0-',

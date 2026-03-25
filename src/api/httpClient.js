@@ -20,6 +20,8 @@ export async function request(path, { token, method = 'GET', body, isFormData = 
   const response = await fetch(`${API_BASE}${path}`, {
     method,
     credentials: 'omit',
+    cache: 'no-store',
+    referrerPolicy: 'no-referrer',
     headers,
     body: body ? (isFormData ? body : JSON.stringify(body)) : undefined,
   })
