@@ -7,7 +7,6 @@ function MusicPanel({
   playSong,
   busy,
   token,
-  isAdmin,
 }) {
   return (
     <article className="rounded-2xl border border-zinc-800 bg-gradient-to-b from-zinc-800/70 to-zinc-900 p-4">
@@ -26,24 +25,22 @@ function MusicPanel({
         </button>
       </div>
 
-      {isAdmin && (
-        <form className="mb-4 space-y-2 rounded-xl border border-zinc-700/70 bg-zinc-900/70 p-3" onSubmit={uploadSong}>
-          <p className="text-xs uppercase tracking-[0.18em] text-zinc-400">Admin Upload</p>
-          <input
-            className="block w-full text-sm"
-            type="file"
-            accept="audio/*"
-            onChange={(event) => setSongUpload(event.target.files?.[0] || null)}
-          />
-          <button
-            className="rounded-full bg-emerald-500 px-3 py-2 text-sm font-medium text-zinc-950 disabled:opacity-50"
-            type="submit"
-            disabled={busy || !token}
-          >
-            Upload Song (Admin)
-          </button>
-        </form>
-      )}
+      <form className="mb-4 space-y-2 rounded-xl border border-zinc-700/70 bg-zinc-900/70 p-3" onSubmit={uploadSong}>
+        <p className="text-xs uppercase tracking-[0.18em] text-zinc-400">Upload Music</p>
+        <input
+          className="block w-full text-sm"
+          type="file"
+          accept="audio/*"
+          onChange={(event) => setSongUpload(event.target.files?.[0] || null)}
+        />
+        <button
+          className="rounded-full bg-emerald-500 px-3 py-2 text-sm font-medium text-zinc-950 disabled:opacity-50"
+          type="submit"
+          disabled={busy || !token}
+        >
+          Upload Song
+        </button>
+      </form>
 
       <div className="max-h-[56vh] space-y-2 overflow-auto pr-1">
         {music.length === 0 && <p className="text-sm text-zinc-500">No songs loaded.</p>}

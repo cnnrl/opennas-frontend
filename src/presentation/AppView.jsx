@@ -215,7 +215,6 @@ function AppView({
                 playSong={music.playSong}
                 busy={busy}
                 token={token}
-                isAdmin={isAdmin}
               />
 
               <NowPlayingCard playerState={music.playerState} />
